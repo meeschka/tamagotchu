@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class='card'>
+    <div class='card-content'>
+        <span class='card-title'>{{ pet.name }}</span>
+        <p>Breed: {{ pet.breed }}</p>
+        <p>Description: {{ pet.description }}</p>
+        <p>Age: {{ pet.age }}</p>
+        <div class='btn-container'>
+            <a class="waves-effect waves-light btn" href='{% url "index" %}'>Back to Pet Index</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
