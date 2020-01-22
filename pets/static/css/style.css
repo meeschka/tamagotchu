@@ -15,4 +15,10 @@ body {
   .btn-container {
       display: flex;
       flex-direction: row-reverse;
+      margin-top: 15px;
+  }
+
+  a.waves-effect.waves-light.btn {
+    margin-left: 5px;
+    margin-right: 5px;
   }

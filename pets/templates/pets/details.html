@@ -1,14 +1,58 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class='card'>
-    <div class='card-content'>
-        <span class='card-title'>{{ pet.name }}</span>
-        <p>Breed: {{ pet.breed }}</p>
-        <p>Description: {{ pet.description }}</p>
-        <p>Age: {{ pet.age }}</p>
-        <div class='btn-container'>
-            <a class="waves-effect waves-light btn" href='{% url "index" %}'>Back to Pet Index</a>
+<h1>{{ pet.name }}</h1>
+<div class='row'>
+    <div class='col s6'>
+        <div class='card'>
+            <div class='card-content'>
+                <span class='card-title'>{{ pet.name }}</span>
+                <p>Breed: {{ pet.breed }}</p>
+                <p>Description: {{ pet.description }}</p>
+                <p>Age: {{ pet.age }}</p>
+                <div class='btn-container'>
+                    <a class="waves-effect waves-light btn" href='{% url "index" %}'>Back to Pet Index</a>
+                    <a class="waves-effect waves-light btn" href='{% url "pets_update" pet.id%}'>Update Pet</a>
+                    <a class="waves-effect waves-light btn" href='{% url "pets_delete" pet.id%}'>Delete Pet</a>
+                </div>
+            </div>
         </div>
     </div>
+    <div class='col s6'>
+        <form method='post' action='{% url "add_feeding" pet.id %}'>
+            {% csrf_token %}
+            {{ feeding_form.as_p }}
+            <input type='submit' class='btn' value='Add Feeding Time'>
+        </form>
+        <br>
+        {% if pet.fed_for_today %}
+            <div class='card-panel teal-text center-align'>{{ pet.name }} has been fed all meals for today</div>
+        {% else %}
+            <div class='card-panel red-text center-align'>{{ pet.name }} needs more food today!</div>
+        {% endif %}
+        <table class='striped'>
+            <thead>
+                <tr><th>Date</th><th>Meal</th></tr>
+            </thead>
+            <tbody>
+                {% for meal in pet.feeding_set.all %}
+                    <tr>
+                        <td>{{ meal.date }}</td>
+                        <td>{{ meal.get_meal_display }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
+<script>
+    const dateEl = document.getElementById('id_date');
+    M.Datepicker.init(dateEl, {
+        format: 'yyyy-mm-dd',
+        defaultDate: new Date(),
+        setDefaultDate: true,
+        autoClose: true
+    })
+    const mealEl = document.getElementById('id_meal');
+    M.FormSelect.init(mealEl)
+</script>
 {% endblock %}
