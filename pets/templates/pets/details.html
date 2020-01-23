@@ -16,6 +16,17 @@
                 </div>
             </div>
         </div>
+        {% for photo in pet.petphoto_set.all %}
+            <img class="responsive-img card-panel" src="{{photo.url}}">
+        {% empty %}
+            <div class="card-panel teal-text center-align">No Photos Uploaded</div>
+        {% endfor %}
+        <form action="{% url 'add_pet_photo' pet.id %}" enctype="multipart/form-data" method="POST" class="card-panel">
+            {% csrf_token %}
+            <input type="file" name="photo-file">
+            <br><br>
+            <input type="submit" class="btn" value="Upload Photo">
+        </form>
     </div>
     <div class='col s6'>
         <form method='post' action='{% url "add_feeding" pet.id %}'>
@@ -42,6 +53,50 @@
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+</div>
+<div class='row'>
+    <div class='col s6'>
+    <h2>{{ pet.name }}'s Toys</h2>
+    {% if pet.toys.count %}
+            {% for toy in pet.toys.all %}
+                <div class='card'>
+                    <div class='card-content'>
+                        <div class='card-title'>
+                            A {{ toy.color }} {{ toy.name }}.
+                        </div>
+                        <hr>
+                      <form method='post' action='{% url "remove_toy" pet.id toy.id %}'>
+                            {% csrf_token %}
+                            <input type='submit' value='Remove Toy' class='btn'>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div> {{ pet.name }} has no toys :( </div>
+        {% endif %}
+    </div>
+    <div class='col s6'>
+    <h2>Toys {{ pet.name }} doesn't have yet</h2>
+    {% if toys.count %}
+            {% for toy in toys.all %}
+                <div class='card'>
+                    <div class='card-content'>
+                        <div class='card-title'>
+                            A {{ toy.color }} {{ toy.name }}.
+                        </div>
+                        <hr>
+                        <form method='post' action='{% url "add_toy" pet.id toy.id %}'>
+                            {% csrf_token %}
+                            <input type='submit' value='Add Toy' class='btn'>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div> {{ pet.name }} has all the toys already! </div>
+        {% endif %}
     </div>
 </div>
 <script>
