@@ -81,7 +81,7 @@ def add_pet_photo(request, pet_id):
     return redirect('details', pet_id=pet_id)
 
 @login_required
-def add_toy_photo(request, toy_id):
+def add_toy_photo(request, pk):
     photo_file = request.FILES.get('photo-file', None)
     if photo_file:
         s3 = boto3.client('s3')
@@ -89,11 +89,11 @@ def add_toy_photo(request, toy_id):
         try:
             s3.upload_fileobj(photo_file, BUCKET, key)
             url = f"{S3_BASE_URL}{BUCKET}/{key}"
-            photo = Photo(url=url, toy_id=toy_id, s3key=key)
+            photo = ToyPhoto(url=url, toy_id=pk, s3key=key)
             photo.save()
         except:
             print('An error occured while uploading file to S3')
-    return redirect('toys_detail', toy_id=toy_id)
+    return redirect('toys_detail', pk=pk)
 
 def signup(request):
     error_message=''
